@@ -1,0 +1,14 @@
+*
+!.gitignore
+
+!.editorconfig
+!README.md
+
+!.github/
+!.github/workflows/
+!.github/workflows/*.yml
+
+!images/
+!images/**/
+!images/**/Dockerfile
+!images/**/*/*
