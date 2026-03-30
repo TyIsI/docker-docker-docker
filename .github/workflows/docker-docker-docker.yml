@@ -34,8 +34,12 @@ jobs:
             - name: Docker
               uses: actions/checkout@v6
 
-            - id: flavours
-              run: ./tools/generate-flavour-matrix-include.sh >> $GITHUB_OUTPUT
+            - name: Docker Docker
+              id: flavours
+              run: ./tools/generate-flavour-matrix-include.sh | tee -a $GITHUB_OUTPUT
+
+            - name: Docker Docker
+              run: cat "$GITHUB_OUTPUT"
 
     docker-docker-docker:
         runs-on: ubuntu-latest
