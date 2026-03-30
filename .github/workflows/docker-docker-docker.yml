@@ -24,25 +24,30 @@ permissions:
     id-token: write
 
 jobs:
-    docker-docker-flavour-matrix-docker-docker-docker:
+    docker-docker-matrix-docker-docker-docker:
         runs-on: ubuntu-latest
+
         outputs:
-            flavour-matrix: ${{ steps.flavour-matrix.outputs.flavour-matrix }}
+            flavours: ${{ steps.flavours.outputs.flavours }}
+
         steps:
-            - id: flavour-matrix
-              run: echo "::set-output name=flavour-matrix::{\"include\":[$(find ./images/ -mindepth 1 -maxdepth 1 -type d | cut -f3 -d/ | xargs -I% echo '\"%\"' | tr ' ' ',')]}"
+            - name: Docker
+              uses: actions/checkout@v6
+
+            - id: flavours
+              run: ./tools/generate-flavours-include.sh >> $GITHUB_OUTPUT
 
             - name: Debug output
-              run: echo "${{ steps.flavour-matrix.outputs.flavour-matrix }}"
+              run: echo "${{ steps.flavours.outputs.flavours }}"
 
     docker-docker-docker:
         runs-on: ubuntu-latest
 
-        needs: docker-docker-flavour-matrix-docker-docker-docker
+        needs: docker-docker-matrix-docker-docker-docker
 
         strategy:
             matrix:
-                flavour: ${{fromJson(needs.docker-docker-flavour-matrix-docker-docker-docker.outputs.flavour-matrix)}}
+                flavour: ${{fromJson(needs.docker-docker-matrix-docker-docker-docker.outputs.flavours)}}
 
         steps:
             - name: Docker
@@ -68,13 +73,13 @@ jobs:
     docker-docker-docker-docker:
         runs-on: ubuntu-latest
 
-        needs: docker-docker-docker
+        needs: [docker-docker-matrix-docker-docker-docker,docker-docker-docker]
 
         if: ${{ github.event_name != 'pull_request' }}
 
         strategy:
             matrix:
-                flavour: ["build-essential"]
+                flavour: ${{fromJson(needs.docker-docker-matrix-docker-docker-docker.outputs.flavours)}}
 
         steps:
             - name: Docker
