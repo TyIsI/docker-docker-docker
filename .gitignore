@@ -12,3 +12,6 @@
 !images/**/
 !images/**/Dockerfile
 !images/**/*/*
+
+!tools/
+!tools/*
