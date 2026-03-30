@@ -37,9 +37,6 @@ jobs:
             - id: flavours
               run: ./tools/generate-flavour-matrix-include.sh >> $GITHUB_OUTPUT
 
-            - name: Debug output
-              run: echo "${{ steps.flavours.outputs.flavours }}"
-
     docker-docker-docker:
         runs-on: ubuntu-latest
 
