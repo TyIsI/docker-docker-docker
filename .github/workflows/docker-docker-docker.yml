@@ -24,12 +24,31 @@ permissions:
     id-token: write
 
 jobs:
+    docker-docker-matrix-docker-docker-docker:
+        runs-on: ubuntu-latest
+
+        outputs:
+            flavours: ${{ steps.flavours.outputs.flavours }}
+
+        steps:
+            - name: Docker
+              uses: actions/checkout@v6
+
+            - name: Docker Docker
+              id: flavours
+              run: ./tools/generate-flavours-matrix-include.sh | tee -a $GITHUB_OUTPUT
+
+            - name: Docker Docker Docker
+              run: cat "$GITHUB_OUTPUT"
+
     docker-docker-docker:
         runs-on: ubuntu-latest
 
+        needs: docker-docker-matrix-docker-docker-docker
+
         strategy:
             matrix:
-                flavour: ["build-essential"]
+                flavour: ${{ fromJson(needs.docker-docker-matrix-docker-docker-docker.outputs.flavours) }}
 
         steps:
             - name: Docker
@@ -55,13 +74,13 @@ jobs:
     docker-docker-docker-docker:
         runs-on: ubuntu-latest
 
-        needs: docker-docker-docker
+        needs: [docker-docker-matrix-docker-docker-docker,docker-docker-docker]
 
         if: ${{ github.event_name != 'pull_request' }}
 
         strategy:
             matrix:
-                flavour: ["build-essential"]
+                flavour: ${{ fromJson(needs.docker-docker-matrix-docker-docker-docker.outputs.flavours) }}
 
         steps:
             - name: Docker
