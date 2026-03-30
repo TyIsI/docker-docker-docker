@@ -36,9 +36,9 @@ jobs:
 
             - name: Docker Docker
               id: flavours
-              run: ./tools/generate-flavour-matrix-include.sh | tee -a $GITHUB_OUTPUT
+              run: ./tools/generate-flavours-matrix-include.sh | tee -a $GITHUB_OUTPUT
 
-            - name: Docker Docker
+            - name: Docker Docker Docker
               run: cat "$GITHUB_OUTPUT"
 
     docker-docker-docker:
@@ -48,7 +48,7 @@ jobs:
 
         strategy:
             matrix:
-                flavour: ${{fromJson(needs.docker-docker-matrix-docker-docker-docker.outputs.flavours)}}
+                flavour: ${{ fromJson(needs.docker-docker-matrix-docker-docker-docker.outputs.flavours) }}
 
         steps:
             - name: Docker
@@ -80,7 +80,7 @@ jobs:
 
         strategy:
             matrix:
-                flavour: ${{fromJson(needs.docker-docker-matrix-docker-docker-docker.outputs.flavours)}}
+                flavour: ${{ fromJson(needs.docker-docker-matrix-docker-docker-docker.outputs.flavours) }}
 
         steps:
             - name: Docker
