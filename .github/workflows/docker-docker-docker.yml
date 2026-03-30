@@ -35,7 +35,7 @@ jobs:
               uses: actions/checkout@v6
 
             - id: flavours
-              run: ./tools/generate-flavours-include.sh >> $GITHUB_OUTPUT
+              run: ./tools/generate-flavour-matrix-include.sh >> $GITHUB_OUTPUT
 
             - name: Debug output
               run: echo "${{ steps.flavours.outputs.flavours }}"
